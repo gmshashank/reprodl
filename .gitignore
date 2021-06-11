@@ -2,3 +2,4 @@ data/*
 .ipynb_checkpoints/*
 .vscode/*
 lightning_logs/*
+outputs/*
