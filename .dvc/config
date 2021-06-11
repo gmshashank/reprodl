@@ -1,0 +1,4 @@
+[core]
+    remote = localremote
+['remote "localremote"']
+    url = /mnt/e/ubuntu/Projects/Datasets/DVC_Datasets
