@@ -18,3 +18,7 @@ model:
 trainer:
   gpus: 0
   max_epochs: 10
+
+defaults:
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog

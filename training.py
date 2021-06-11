@@ -13,7 +13,11 @@ from pytorch_lightning.metrics import functional
 
 import hydra
 from hydra.utils import get_original_cwd
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ESC50Dataset(torch.utils.data.Dataset):
@@ -49,7 +53,7 @@ class ESC50Dataset(torch.utils.data.Dataset):
 class AudioNet(pl.LightningModule):
     def __init__(self, hparams):
         super().__init__()
-        self.save_hyperparameters(hparams) 
+        self.save_hyperparameters(hparams)
 
         self.conv1 = nn.Conv2d(1, hparams.base_filters, 11, padding=5)
         self.bn1 = nn.BatchNorm2d(hparams.base_filters)
@@ -107,9 +111,8 @@ class AudioNet(pl.LightningModule):
 def train(cfg: DictConfig):
     # This is the main training function requested by the exercise.
     # We use folds 1,2,3 for training, 4 for validation, 5 for testing.
-    import os
 
-    print(os.getcwd())
+    logger.info(OmegaConf.to_yaml(cfg))
 
     # Load data
     path = Path(get_original_cwd()) / Path(cfg.data.path)
