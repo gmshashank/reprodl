@@ -22,7 +22,6 @@ logger = logging.getLogger(__name__)
 import wandb
 
 
-
 class ESC50Dataset(torch.utils.data.Dataset):
     # Simple class to load the desired folders inside ESC-50
 
@@ -116,8 +115,15 @@ def train(cfg: DictConfig):
     # We use folds 1,2,3 for training, 4 for validation, 5 for testing.
 
     logger.info(OmegaConf.to_yaml(cfg))
-    
-    hparams_default = {"base_filters": cfg.model.base_filters, "lr": cfg.model.optim.lr, "sample_rate": cfg.data.sample_rate}
+
+
+
+
+    hparams_default = {
+        "base_filters": cfg.model.base_filters,
+        "lr": cfg.model.optim.lr,
+        "sample_rate": cfg.data.sample_rate,
+    }
     wandb.init(config=hparams_default)
 
     wandb_config_omega = OmegaConf.create(wandb.config._as_dict())
