@@ -116,9 +116,6 @@ def train(cfg: DictConfig):
 
     logger.info(OmegaConf.to_yaml(cfg))
 
-
-
-
     hparams_default = {
         "base_filters": cfg.model.base_filters,
         "lr": cfg.model.optim.lr,
