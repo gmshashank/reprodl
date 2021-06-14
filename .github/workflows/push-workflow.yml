@@ -1,7 +1,8 @@
 name: push-workflow
 on: [push]
 jobs:
-  build: ubuntu-latest
+  build: Build the environment 
+  runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
