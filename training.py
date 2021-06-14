@@ -19,6 +19,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+import wandb
+
+
 
 class ESC50Dataset(torch.utils.data.Dataset):
     # Simple class to load the desired folders inside ESC-50
@@ -113,6 +116,14 @@ def train(cfg: DictConfig):
     # We use folds 1,2,3 for training, 4 for validation, 5 for testing.
 
     logger.info(OmegaConf.to_yaml(cfg))
+    
+    hparams_default = {"base_filters": cfg.model.base_filters, "lr": cfg.model.optim.lr, "sample_rate": cfg.data.sample_rate}
+    wandb.init(config=hparams_default)
+
+    wandb_config_omega = OmegaConf.create(wandb.config._as_dict())
+    cfg.data.sample_rate = wandb_config_omega.sample_rate
+    cfg.model.base_filters = wandb_config_omega.base_filters
+    cfg.model.optim.lr = wandb_config_omega.lr
 
     # Load data
     path = Path(get_original_cwd()) / Path(cfg.data.path)
@@ -128,10 +139,11 @@ def train(cfg: DictConfig):
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=cfg.data.batch_size)
 
     pl.seed_everything(cfg.seed)
+    wandb_logger = pl.loggers.WandbLogger()
 
     # Initialize the network
     audionet = AudioNet(cfg.model)
-    trainer = pl.Trainer(**cfg.trainer)
+    trainer = pl.Trainer(**cfg.trainer, logger=wandb_logger)
     trainer.fit(audionet, train_loader, val_loader)
 
 
